@@ -2,10 +2,6 @@ import numpy as np
 np.random.seed(42)
 
 
-import numpy as np
-np.random.seed(42)
-
-
 class Affine():
     def __init__(self, in_dim: int, out_dim: int):
         """
