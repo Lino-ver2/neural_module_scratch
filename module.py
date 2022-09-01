@@ -2,7 +2,7 @@ import numpy as np
 np.random.seed(42)
 
 
-class Affine():
+class Linear():
     def __init__(self, in_dim: int, out_dim: int):
         """
         in_dim : explanatory_variable_dim_
@@ -13,7 +13,7 @@ class Affine():
         self.in_dim = in_dim
         self.out_dim = out_dim
         
-        self.weight = np.random.randn(in_dim, out_dim)
+        self.weight = np.random.randn(out_dim, in_dim)
         self.bias = np.zeros(out_dim, dtype=float)
 
         self.dx , self.dw, self.db = None, None, None
@@ -24,7 +24,8 @@ class Affine():
         output : output_data_ (batch_size, out_dim)
         """
         self.x = x
-        output = np.dot(self.x, self.weight) + self.bias
+        # Affine
+        output = np.dot(self.x, self.weight.T) + self.bias
         self.param = {'w' : self.weight, 'b' : self.bias}
         return  output
 
@@ -33,8 +34,16 @@ class Affine():
         grad : previous_gradient_ (batch_size, out_dim)
         dx : gradient_ (batch_size, in_dim)
         """
-        dx = np.dot(grad, self.weight.T)
-        dw = np.dot(self.x.T, grad)
+        # transpose x_shape
+        if self.x.ndim == 2:
+            x_T = self.x.T
+        if self.x.ndim == 3:
+            x_T = np.transpose(self.x, (0, 2, 1))
+        if self.x.ndim == 4:
+            x_T = np.transpose(self.x, (0, 1, 3, 2))
+        # calculate gradient
+        dx = np.dot(grad, self.weight)
+        dw = np.dot(x_T, grad)
         db = np.sum(self.bias)
         self.grad_param = {'w' : dw, 'b' : db}
         return dx
