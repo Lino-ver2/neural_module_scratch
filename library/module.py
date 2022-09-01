@@ -1,7 +1,9 @@
 import numpy as np
 np.random.seed(42)
 
-
+##################################################
+#             Linear Transformation              #
+##################################################
 class Linear():
     def __init__(self, in_dim: int, out_dim: int):
         """
@@ -46,4 +48,28 @@ class Linear():
         dw = np.dot(x_T, grad)
         db = np.sum(self.bias)
         self.grad_param = {'w' : dw, 'b' : db}
+        return dx
+
+
+##################################################
+#              Activation Function               #
+##################################################
+
+class ReLu():
+    def __init__(self):
+        self.mask = None
+
+    def __call__(self, x: np.ndarray) -> np.ndarray:
+        """ forward
+        self.mask : boolean_mask_ where(x>0, True)
+        """
+        self.mask  = [x > 0]
+        dims = list(x.shape)
+        out = np.zeros(dims)
+        out[x > 0] = x[x > 0]
+        return out
+
+    def backward(self, grad: np.ndarray) -> np.ndarray:
+        mask = self.mask[0]
+        dx = grad * mask
         return dx
