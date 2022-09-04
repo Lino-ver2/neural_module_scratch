@@ -46,10 +46,9 @@ class Linear():
         # calculate gradient
         dx = np.dot(grad, self.weight)
         dw = np.dot(x_T, grad)
-        db = np.sum(self.bias)
+        db = np.sum(grad, axis=0)
         self.grad_param = {'w' : dw, 'b' : db}
         return dx
-
 
 ##################################################
 #              Activation Function               #
